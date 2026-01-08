@@ -1,0 +1,7 @@
+google-play-scraper
+pandas
+transformers
+sentence-transformers
+scikit-learn
+faiss-cpu
+sqlite3

@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.env
+.venv
+venv/
+
+# Generated data and outputs
+memory/
+data/raw_reviews/
+data/processed/
+output/
+*.csv
+*.log
