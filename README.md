@@ -16,8 +16,6 @@ The system uses an **agentic AI architecture** combining rule-based taxonomy, se
 * **Scalability** for continuous daily ingestion
 * **Actionable insights** for product and operations teams
 
-This project was developed as part of the **Senior AI Engineer Assignment – Pulsegen Technologies**.
-
 ---
 
 ## Key Capabilities
