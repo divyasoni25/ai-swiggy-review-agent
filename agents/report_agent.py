@@ -4,7 +4,6 @@ import sqlite3
 import os
 
 class ReportAgent:
-
     def generate(self, target_date, window=30):
         conn = sqlite3.connect("memory/topics.db")
         cur = conn.cursor()

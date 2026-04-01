@@ -1,4 +1,3 @@
-
 from agents.ingestion_agent import IngestionAgent
 from agents.extraction_agent import ExtractionAgent
 from agents.normalization_agent import NormalizationAgent
@@ -8,6 +7,7 @@ from sentence_transformers import SentenceTransformer
 from datetime import datetime, timedelta
 from agents.auto_taxonomy_agent import AutoTaxonomyDiscoveryAgent
 import os
+
 class ReviewTrendAgent:
 
     def __init__(self):
@@ -29,8 +29,8 @@ class ReviewTrendAgent:
 
             # 1️⃣ Fetch reviews
             reviews = self.ingestion.fetch_reviews(app_id, date_str)
-            print(f"Total reviews fetched: {len(reviews)}")
-            print("Sample review:", reviews[:2])
+            #print(f"Total reviews fetched: {len(reviews)}")
+            #print("Sample review:", reviews[:2])
 
             if not reviews:
                 start += timedelta(days=1)
@@ -53,7 +53,7 @@ class ReviewTrendAgent:
             # Inject into extractor + normalizer
             for topic, keywords in new_topics.items():
                 if topic not in self.extractor.taxonomy:
-                    print(f"New topic discovered: {topic} → {keywords}")
+                    print(f"New topic discovered: {topic} - {keywords}")
                     self.extractor.taxonomy[topic] = keywords
                     self.normalizer.allowed_topics.add(topic)
 
@@ -79,7 +79,7 @@ class ReviewTrendAgent:
                 if not self.normalizer.is_valid_topic(topic):
                     continue
 
-                print(f"Processing topic {i+1}/{len(topics)} → RAW: {raw_topic} | NORMALIZED: {topic}")
+                print(f"Processing topic {i+1}/{len(topics)} - RAW: {raw_topic} | NORMALIZED: {topic}")
 
                 # Normalize text
                 topic = self.normalizer.normalize_text(topic)
@@ -118,6 +118,6 @@ if __name__ == "__main__":
     agent = ReviewTrendAgent()
     agent.run(
         app_id="in.swiggy.android",
-        start_date="2026-01-01",
-        target_date="2026-01-07"
+        start_date="2026-03-28",
+        target_date="2026-04-1"
     )

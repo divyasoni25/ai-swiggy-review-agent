@@ -1,4 +1,3 @@
-# agents/auto_taxonomy_agent.py
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
@@ -34,18 +33,18 @@ class AutoTaxonomyDiscoveryAgent:
         if len(unmatched_phrases) < self.min_cluster_size:
             return {}
 
-        # 🔍 Clean + filter junk
+        # Clean + filter junk
         cleaned = []
         for t in unmatched_phrases:
             c = self.clean_text(t)
             if c and not self.is_junk(c):
                 cleaned.append(c)
 
-        # 🛑 If still too small, skip discovery
+        # If still too small, skip discovery
         if len(cleaned) < self.min_cluster_size:
             return {}
 
-        # ⚠️ TF-IDF with safe parameters
+        # TF-IDF with safe parameters
         try:
             vectorizer = TfidfVectorizer(
                 stop_words="english",
@@ -57,7 +56,7 @@ class AutoTaxonomyDiscoveryAgent:
             # Graceful exit if vocabulary is empty
             return {}
 
-        # 🧠 Cluster
+        # Cluster
         clustering = AgglomerativeClustering(
             n_clusters=None,
             distance_threshold=1.2
