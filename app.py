@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import threading
 import subprocess
 
 app = FastAPI()
@@ -7,11 +8,14 @@ app = FastAPI()
 def home():
     return {"message": "AI Review Agent"}
 
+def run_pipeline():
+    try:
+        subprocess.run(["python", "main.py"])
+    except Exception as e:
+        print("Error running pipeline:", e)
+
 @app.get("/run")
 def run_agent():
-    result = subprocess.run(["python", "main.py"], capture_output=True, text=True)
-    return {
-        "status": "completed",
-        "output": result.stdout,
-        "error": result.stderr
-    }
+    thread = threading.Thread(target=run_pipeline)
+    thread.start()
+    return {"status": "started in background"}
