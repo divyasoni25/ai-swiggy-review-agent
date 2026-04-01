@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 import threading
 import subprocess
+import sys
+import os
 
 app = FastAPI()
 
@@ -10,7 +12,12 @@ def home():
 
 def run_pipeline():
     try:
-        subprocess.run(["python", "main.py"])
+        python_path = sys.executable
+        script_path = os.path.join(os.getcwd(), "main.py")
+        
+        print("Starting pipeline...")
+        subprocess.run([python_path, script_path])
+        print("Pipeline finished")
     except Exception as e:
         print("Error running pipeline:", e)
 
