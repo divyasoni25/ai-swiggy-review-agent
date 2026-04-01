@@ -10,36 +10,28 @@ class IngestionAgent:
         self.cached_reviews_by_date = None
 
     # INTERNAL: FETCH RECENT REVIEWS
-    def _fetch_recent_reviews(self, app_id, max_pages=20):
+    def _fetch_recent_reviews(self, app_id):
         """
-        Fetches the most recent reviews from Google Play and returns
-        a list of dicts: {"text": ..., "date": ...}
+        Fetch latest reviews in one go (more reliable than pagination)
         """
+        result, _ = reviews(
+            app_id,
+            lang="en",
+            country="in",
+            count=1000
+        )
+
         all_reviews = []
-        continuation_token = None
 
-        for _ in range(max_pages):
-            result, continuation_token = reviews(
-                app_id,
-                lang="en",
-                country="in",
-                sort=Sort.NEWEST,
-                count=200,
-                continuation_token=continuation_token,
-            )
+        for r in result:
+            text = r.get("content", "").strip()
+            review_date = r.get("at").date()
 
-            for r in result:
-                text = r.get("content", "").strip()
-                review_date = r.get("at").date()
-
-                if text:
-                    all_reviews.append({
-                        "text": text,
-                        "date": review_date
-                    })
-
-            if not continuation_token:
-                break
+            if text:
+                all_reviews.append({
+                    "text": text,
+                    "date": review_date
+                })
 
         return all_reviews
 
@@ -62,10 +54,10 @@ class IngestionAgent:
 
         # First-time fetch & cache
         if self.cached_reviews_by_date is None:
-            print("📥 Fetching recent reviews from Play Store...")
+            print("Fetching recent reviews from Play Store...")
             recent_reviews = self._fetch_recent_reviews(app_id)
             self.cached_reviews_by_date = self._group_by_date(recent_reviews)
-            print(f"✅ Cached {sum(len(v) for v in self.cached_reviews_by_date.values())} reviews across {len(self.cached_reviews_by_date)} days")
+            print(f"Cached {sum(len(v) for v in self.cached_reviews_by_date.values())} reviews across {len(self.cached_reviews_by_date)} days")
 
         # Return only reviews for requested date
         return self.cached_reviews_by_date.get(date_str, [])
